@@ -19,7 +19,7 @@ router.get('/callback', passport.authenticate('auth0',
 		failureRedirect: '/account/login'
 	}), function (req, res) {
 		var test = req.isAuthenticated();
-		res.redirect(req.session.returnTo || 'http://localhost:3000');
+		res.redirect(req.session.returnTo || '/');
 	});
 
 module.exports = router;

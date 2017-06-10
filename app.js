@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var session = require('express-session');
 //var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -10,6 +11,7 @@ var account = require('./routes/account');
 var users = require('./routes/users');
 
 var app = express();
+
 
 var passport = require('passport');
 var Auth0Strategy = require('passport-auth0');
@@ -37,6 +39,11 @@ passport.deserializeUser(function (user, done) {
 	done(null, user);
 });
 
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 // view engine setup
@@ -52,8 +59,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/account', account);
 app.use('/users', users);
+app.use('/account', account);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
