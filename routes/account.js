@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
 // Render the login template
 router.get('/login',
 	function (req, res) {
@@ -20,5 +19,3 @@ router.get('/callback',
 	function (req, res) {
 		res.redirect(req.session.returnTo || '/user');
 	});
-
-module.exports = router;
