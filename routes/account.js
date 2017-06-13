@@ -18,7 +18,6 @@ router.get('/callback', passport.authenticate('auth0',
 	{
 		failureRedirect: '/account/login'
 	}), function (req, res) {
-		var test = req.isAuthenticated();
 		res.redirect(req.session.returnTo || '/');
 	});
 

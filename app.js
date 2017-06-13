@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var account = require('./routes/account');
 var users = require('./routes/users');
+var generate = require('./routes/generate');
 
 var app = express();
 
@@ -39,11 +40,20 @@ passport.deserializeUser(function (user, done) {
 	done(null, user);
 });
 
-app.use(session({
+var sess = {
 	secret: process.env.SESSION_SECRET,
-	resave: true,
-	saveUninitialized: true
-}));
+	resave: false,
+	saveUninitialized: true,
+	cookie: {}
+};
+
+if (app.get('env') === 'production') {
+	app.set('trust proxy', 1); // trust first proxy
+	sess.cookie.secure = true; // serve secure cookies
+}
+
+app.use(session(sess));
+
 app.use(passport.initialize());
 app.use(passport.session());
 // view engine setup
@@ -61,6 +71,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/account', account);
+app.use('/generate', generate);
 
 
 // catch 404 and forward to error handler
